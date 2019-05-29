@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.jh.action.Action;
 import com.jh.action.actionForward;
@@ -23,6 +22,27 @@ public class MemberService implements Action {
 	public MemberService() {
 		memberdao = new memberDAO();
 		imgDAO = new ImgDAO();
+	}
+	
+	public actionForward idCheck(HttpServletRequest request, HttpServletResponse response) {
+		actionForward actionforward = new actionForward();
+		String id = request.getParameter("id");
+		int check = 0;
+		Connection con;
+		try {
+			con = DBConnector.getConnect();
+			check = memberdao.idCheck(id, con);
+
+		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		request.setAttribute("result", check);
+		actionforward.setCheck(true);
+		actionforward.setPath("../WEB-INF/views/common/result2.jsp");
+		
+		return actionforward;
 	}
 	@Override
 	public actionForward list(HttpServletRequest request, HttpServletResponse response) {

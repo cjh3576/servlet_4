@@ -9,19 +9,35 @@ import java.util.List;
 import com.jh.board.BoardDAO;
 import com.jh.board.BoardDTO;
 import com.jh.page.SearchRow;
+import com.jh.util.DBConnector;
 
 public class NoticeDAO implements BoardDAO{
 
 	@Override
 	public int getNum() throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		Connection con = DBConnector.getConnect();
+		String sql ="select notice_seq.nextval from dual";
+		PreparedStatement st =con.prepareStatement(sql);
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		result=rs.getInt(1);
+		DBConnector.disConnection(con, st, rs);
+		return result;
 	}
 
 	@Override
 	public int getTotalCount(SearchRow searchRow, Connection con) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		String sql ="select count(num) from notice where "+searchRow.getSearch().getKind()+" like ?";
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setString(1, "%"+searchRow.getSearch().getSearch()+"%");
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		result = rs.getInt(1);
+		rs.close();
+		st.close();
+		return result;
 	}
 
 	@Override
@@ -55,14 +71,44 @@ public class NoticeDAO implements BoardDAO{
 
 	@Override
 	public BoardDTO selectOne(int num, Connection con) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		NoticeDTO noticeDTO = new NoticeDTO();
+		
+		String sql = "select * from notice where num=?";
+		
+		PreparedStatement st = con.prepareStatement(sql);
+		
+		st.setInt(1, num);
+		
+		ResultSet rs = st.executeQuery();
+		
+		if(rs.next()) {
+			noticeDTO.setNum(rs.getInt("num"));
+			noticeDTO.setTitle(rs.getString("title"));
+			noticeDTO.setContents(rs.getString("contents"));
+			noticeDTO.setWriter(rs.getString("writer"));
+			noticeDTO.setReg_date(rs.getString("reg_date"));
+			noticeDTO.setHit(rs.getInt("hit"));
+		}
+		rs.close();
+		st.close();
+		
+		return noticeDTO;
+	
 	}
 
 	@Override
 	public int insert(BoardDTO boardDTO, Connection con) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		
+		String sql ="insert into notice values(?,?,?,?, sysdate,0)";
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setInt(1, boardDTO.getNum());
+		st.setString(2, boardDTO.getTitle());
+		st.setString(3, boardDTO.getContents());
+		st.setString(4, boardDTO.getWriter());
+		result = st.executeUpdate();
+		st.close();
+		return result;
 	}
 
 	@Override

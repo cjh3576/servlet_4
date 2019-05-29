@@ -8,19 +8,19 @@ import com.jh.util.DBConnector;
 
 public class memberDAO {
 	//선생님 중복확인
-	public int idCheck(String id) throws Exception{
-		int result = 0;
-		Connection con = DBConnector.getConnect();
+	public int idCheck(String id,Connection con) throws Exception{
 		String sql = "select id from member where id=?";
 		PreparedStatement st = con.prepareStatement(sql);
 		st.setString(1, id);
 		ResultSet rs = st.executeQuery();
+		int check = 1;
 		if(rs.next()) {
-			result = 1;
+			check = 0;
 		}
 		
-		DBConnector.disConnection(con, st, rs);
-		return result;
+		rs.close();
+		st.close();
+		return check;
 	}
 	
 	//중복확인

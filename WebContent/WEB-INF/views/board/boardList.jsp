@@ -60,7 +60,7 @@
 				<li class="next"><a href="./${board}List?curPage=${pager.lastNum+1}&kind=${pager.search.kind}&search=${pager.search.search}">Next</a></li>
 			</c:if>
 		</ul>
-	<a href="./${board}Write">Go write</a>
+	<a href="./${board}Write" class="btn btn-primary">Go write</a>
 	</div>
 
 </body>

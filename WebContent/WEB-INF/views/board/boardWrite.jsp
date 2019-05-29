@@ -7,8 +7,42 @@
 <meta charset="UTF-8">
 <title>Notice Write</title>
 <c:import url="../temp/bootstrap.jsp" />
+<script type="text/javascript" src="../se2/js/HuskyEZCreator.js" charset="utf-8"></script>
 <script type="text/javascript">
+
+	var oEditors = [];
 	$(function() {
+		nhn.husky.EZCreator.createInIFrame({
+		    oAppRef: oEditors,
+		    elPlaceHolder: "contents",
+		    //SmartEditor2Skin.html 파일이 존재하는 경로
+		    sSkinURI: "/servlet_4/se2/SmartEditor2Skin.html",  
+		    htParams : {
+		        // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+		        bUseToolbar : true,             
+		        // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+		        bUseVerticalResizer : true,     
+		        // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+		        bUseModeChanger : true,         
+		        fOnBeforeUnload : function(){
+		             
+		        }
+		    }, 
+		    fOnAppLoad : function(){
+		        //기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
+		        oEditors.getById["contents"].exec("PASTE_HTML", ["기존 DB에 저장된 내용을 에디터에 적용할 문구"]);
+		    },
+		    fCreator: "createSEditor2"
+		}); //텍스트 폼 바꿈 스마트에디터
+		
+		//저장버튼 클릭시 form 전송
+		$("#save").click(function(){
+		    oEditors.getById["contents"].exec("UPDATE_CONTENTS_FIELD", []);
+		    $("#frm").submit();
+		});    
+		
+		 
+		 
 		var file = document.getElementById('file');
 		var num = 0;
 		var d1=0;
@@ -43,7 +77,7 @@
 <body>
 	<c:import url="../temp/header.jsp" />
 	<div class="container">
-		<form action="./boardWrite" method="post" enctype="multipart/form-data">
+		<form id = "frm" action="./${board}Write" method="post" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="title">Title:</label> <input type="text"
 					class="form-control" id="title" name="title">
@@ -64,7 +98,7 @@
 			<div class="form-group">
 				<input type="button" id="add" value="Add" class="btn btn-primary">
 			</div>
-			<button class="btn btn-danger">Write</button>
+			<input type="button" id = "save" class="btn btn-danger" value = "write">
 		</form>
 
 

@@ -14,7 +14,7 @@
 	<jsp:include page="../temp/header.jsp" />
 	<div class="container main">
 		<h2>약관동의</h2>
-		<form action="./memberJoin" method="get" denctype="multipart/form-data">
+		<form action="./memberJoin" method="get" >
 			<div class="checkbox">
 				<label><input type="checkbox" id="checkAll"> 전체동의</label>
 			</div>

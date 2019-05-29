@@ -43,6 +43,8 @@ public class NoticeController extends HttpServlet {
 			actionforward= noticeservice.update(request, response);
 		}else if(command.equals("/noticeWrite")) {
 			actionforward= noticeservice.insert(request, response);
+		}else if(command.equals("/noticeDelete")) {
+			actionforward = noticeservice.delete(request, response);
 		}
 		
 		request.setAttribute("board", "notice");

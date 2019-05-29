@@ -82,8 +82,40 @@ public class QnaService implements Action {
 
 	@Override
 	public actionForward select(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		return null;
+		actionForward actionforward = new actionForward();
+		
+		BoardDTO boardDTO = null;
+		List<UploadDTO> ar = null;
+		Connection con = null;
+		try {
+			con = DBConnector.getConnect();
+			int num = Integer.parseInt(request.getParameter("num"));
+			boardDTO = qnaDAO.selectOne(num, con);
+			ar = uploadDAO.selectList(num,con);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO: handle exception
+			}
+		}
+		String path = "";
+		if(boardDTO != null) {
+			request.setAttribute("dto", boardDTO);
+			request.setAttribute("upload", ar);
+			path = "../WEB-INF/views/board/boardSelect.jsp";
+		} else {
+			request.setAttribute("message", "No Data");
+			request.setAttribute("path", "../board/boardList");
+			path="../WEB-INF/views/common/result.jsp";
+		}
+		actionforward.setCheck(true);
+		actionforward.setPath(path);
+		return actionforward;
 	}
 
 	@Override
@@ -122,10 +154,10 @@ public class QnaService implements Action {
 				qnaDTO.setWriter(multipartRequest.getParameter("writer"));
 				qnaDTO.setContents(multipartRequest.getParameter("contents"));
 				
+				con = DBConnector.getConnect();
 				//1. 시퀀스 번호
 				int num = qnaDAO.getNum();
 				qnaDTO.setNum(num);
-				con = DBConnector.getConnect();
 				con.setAutoCommit(false);
 				//2. qna insert
 				num = qnaDAO.insert(qnaDTO, con);
@@ -160,7 +192,7 @@ public class QnaService implements Action {
 				}
 			}
 			actionforward.setCheck(false);
-			actionforward.setPath("../board/boardList");
+			actionforward.setPath("./qnaList");
 			
 		}//post끝
 		return actionforward;
@@ -168,8 +200,41 @@ public class QnaService implements Action {
 
 	@Override
 	public actionForward update(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		return null;
+		actionForward actionfoward = new actionForward();
+		actionfoward.setCheck(true);
+		actionfoward.setPath("../WEB-INF/views/board/boardUpdate.jsp");
+		String method = request.getMethod();
+		
+		if(method.equals("POST")) {
+			QnaDTO qnaDTO = new QnaDTO();
+			
+		}else {
+			int num = Integer.parseInt(request.getParameter("num"));
+			Connection con = null;;
+			BoardDTO boardDTO = null;
+			List<UploadDTO> ar = null;
+			try {
+				con = DBConnector.getConnect();
+				boardDTO = qnaDAO.selectOne(num, con);
+				ar = uploadDAO.selectList(num, con);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} //finally
+			request.setAttribute("dto", boardDTO);
+			request.setAttribute("upload", ar);
+			
+		} //GET방식
+		
+		
+		return actionfoward;
 	}
 
 	@Override

@@ -82,8 +82,40 @@ actionForward actionforward = new actionForward();
 
 	@Override
 	public actionForward select(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		return null;
+		actionForward actionforward = new actionForward();
+		
+		BoardDTO boardDTO = null;
+		List<UploadDTO> ar = null;
+		Connection con = null;
+		try {
+			con = DBConnector.getConnect();
+			int num = Integer.parseInt(request.getParameter("num"));
+			boardDTO = noticeDAO.selectOne(num, con);
+			ar = uploadDAO.selectList(num,con);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO: handle exception
+			}
+		}
+		String path = "";
+		if(boardDTO != null) {
+			request.setAttribute("dto", boardDTO);
+			request.setAttribute("upload", ar);
+			path = "../WEB-INF/views/board/boardSelect.jsp";
+		} else {
+			request.setAttribute("message", "No Data");
+			request.setAttribute("path", "../board/boardList");
+			path="../WEB-INF/views/common/result.jsp";
+		}
+		actionforward.setCheck(true);
+		actionforward.setPath(path);
+		
+		return actionforward;
 	}
 
 	@Override
@@ -160,7 +192,7 @@ actionForward actionforward = new actionForward();
 				}
 			}
 			actionforward.setCheck(false);
-			actionforward.setPath("./boardList");
+			actionforward.setPath("./noticeList");
 			
 		}//post끝
 		return actionforward;
@@ -168,8 +200,41 @@ actionForward actionforward = new actionForward();
 
 	@Override
 	public actionForward update(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		return null;
+		actionForward actionfoward = new actionForward();
+		actionfoward.setCheck(true);
+		actionfoward.setPath("../WEB-INF/views/board/boardUpdate.jsp");
+		String method = request.getMethod();
+		
+		if(method.equals("POST")) {
+			
+			
+		}else {
+			int num = Integer.parseInt(request.getParameter("num"));
+			Connection con = null;;
+			BoardDTO boardDTO = null;
+			List<UploadDTO> ar = null;
+			try {
+				con = DBConnector.getConnect();
+				boardDTO = noticeDAO.selectOne(num, con);
+				ar = uploadDAO.selectList(num, con);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} //finally
+			request.setAttribute("dto", boardDTO);
+			request.setAttribute("upload", ar);
+			
+		} //GET방식
+		
+		
+		return actionfoward;
 	}
 
 	@Override
