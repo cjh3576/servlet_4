@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.jh.action.actionForward;
+import com.jh.member.memberDTO;
 
 /**
  * Servlet implementation class HomeController
@@ -30,6 +31,19 @@ public class HomeController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String s = request.getParameter("s");
+		if(s != null&& s.equals("2")) {
+			memberDTO memberdto = new memberDTO();
+			memberdto.setId("admin");
+			request.getSession().setAttribute("member", memberdto);
+		}else if(s != null && s.equals("1")) {
+			memberDTO memberdto = new memberDTO();
+			memberdto.setId("iu");
+			request.getSession().setAttribute("member", memberdto);
+		}else if(s!= null && s.equals("3")){
+			request.getSession().invalidate();
+		}
+		
 		RequestDispatcher view = request.getRequestDispatcher("./WEB-INF/views/index.jsp");
 		view.forward(request, response);
 	}
