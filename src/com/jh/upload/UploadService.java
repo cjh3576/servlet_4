@@ -38,7 +38,7 @@ public class UploadService implements Action {
 		// 스마트에디터 파일 업로드
 		actionForward actionforward = new actionForward();
 		int maxPostSize = 50*1024*1024;
-		String saveDirectory = request.getServletContext().getRealPath("upload_se2");
+		String saveDirectory = request.getServletContext().getRealPath("upload");
 		System.out.println(saveDirectory);
 		
 		File file = new File(saveDirectory);
@@ -54,7 +54,7 @@ public class UploadService implements Action {
 			//1. 절대 경로
 			String path = request.getContextPath();
 			//2. 최종 결과물
-			String result = "&bNewLine=true&sFileURL="+path+"/upload_se2/"+fileName;
+			String result = "&bNewLine=true&sFileURL="+path+"/upload/"+fileName;
 			//3.
 			result =callback+"?callback_func="+callback_func+result;
 			

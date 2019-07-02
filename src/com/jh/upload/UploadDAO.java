@@ -9,7 +9,6 @@ import java.util.List;
 import com.jh.util.DBConnector;
 
 public class UploadDAO {
-	//delete
 	
 	//insert
 	public int insert(UploadDTO uploadDTO, Connection con) throws Exception{

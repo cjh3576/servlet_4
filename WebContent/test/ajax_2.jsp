@@ -28,6 +28,7 @@
 			//4. response 처리
 			xhttp.onreadystatechange = function(){
 				if(this.readyState == 4 && this.status == 200){
+					alert(this.responseText);
 					if(this.responseText.trim()=='1'){
 					$('#result').html("사용가능한 ID");
 					$("#result").css("color","blue");
